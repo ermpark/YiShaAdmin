@@ -101,7 +101,7 @@ namespace YiSha.Admin.WebApi
             app.UseSwaggerUI(c =>
             {
                 c.RoutePrefix = "api-doc";
-                c.SwaggerEndpoint("v1/swagger.json", "YiSha Api v1");
+                c.SwaggerEndpoint("v1/swagger.json", "YS Api v1");
             });
             app.UseRouting();
             app.UseEndpoints(endpoints =>
