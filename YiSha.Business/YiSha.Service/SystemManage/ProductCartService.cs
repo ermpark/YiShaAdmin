@@ -17,40 +17,35 @@ namespace YiSha.Service.SystemManage
 {
     /// <summary>
     /// 创 建：admin
-    /// 日 期：2022-02-11 18:44
-    /// 描 述：产品明细表服务类
+    /// 日 期：2022-02-12 12:43
+    /// 描 述：购物车服务类
     /// </summary>
-    public class ProductInfoService : RepositoryFactory
+    public class ProductCartService :  RepositoryFactory
     {
         #region 获取数据
-        public async Task<List<ProductInfoEntity>> GetList(ProductInfoListParam param)
+        public async Task<List<ProductCartEntity>> GetList(ProductCartListParam param)
         {
             var expression = ListFilter(param);
             var list = await this.BaseRepository().FindList(expression);
             return list.ToList();
         }
 
-        public async Task<List<ProductInfoEntity>> GetPageList(ProductInfoListParam param, Pagination pagination)
+        public async Task<List<ProductCartEntity>> GetPageList(ProductCartListParam param, Pagination pagination)
         {
             var expression = ListFilter(param);
-            var list = await this.BaseRepository().FindList(expression, pagination);
+            var list= await this.BaseRepository().FindList(expression, pagination);
             return list.ToList();
         }
 
-        public async Task<ProductInfoEntity> GetEntity(long id)
+        public async Task<ProductCartEntity> GetEntity(long id)
         {
-            return await this.BaseRepository().FindEntity<ProductInfoEntity>(id);
+            return await this.BaseRepository().FindEntity<ProductCartEntity>(id);
         }
         #endregion
 
         #region 提交数据
-        public async Task SaveForm(ProductInfoEntity entity)
+        public async Task SaveForm(ProductCartEntity entity)
         {
-            if (!string.IsNullOrWhiteSpace(entity.Name))
-            {
-                //首字母转换
-                entity.NamePY = Util.StringHelper.GetFirstPinyin(entity.Name);
-            }
             if (entity.Id.IsNullOrZero())
             {
                 entity.Create();
@@ -58,7 +53,7 @@ namespace YiSha.Service.SystemManage
             }
             else
             {
-
+                
                 await this.BaseRepository().Update(entity);
             }
         }
@@ -66,20 +61,16 @@ namespace YiSha.Service.SystemManage
         public async Task DeleteForm(string ids)
         {
             long[] idArr = TextHelper.SplitToArray<long>(ids, ',');
-            await this.BaseRepository().Delete<ProductInfoEntity>(idArr);
+            await this.BaseRepository().Delete<ProductCartEntity>(idArr);
         }
         #endregion
 
         #region 私有方法
-        private Expression<Func<ProductInfoEntity, bool>> ListFilter(ProductInfoListParam param)
+        private Expression<Func<ProductCartEntity, bool>> ListFilter(ProductCartListParam param)
         {
-            var expression = LinqExtensions.True<ProductInfoEntity>();
+            var expression = LinqExtensions.True<ProductCartEntity>();
             if (param != null)
             {
-                if (!string.IsNullOrEmpty(param.Name))
-                {
-                    expression = expression.And(t => t.Name.Contains(param.Name)).Or(t => t.NamePY.Contains(param.Name ));
-                }
             }
             return expression;
         }

@@ -7,11 +7,10 @@ namespace YiSha.Model.Param.SystemManage
 {
     /// <summary>
     /// 创 建：admin
-    /// 日 期：2022-02-11 18:44
-    /// 描 述：产品明细表实体查询类
+    /// 日 期：2022-02-12 12:43
+    /// 描 述：购物车实体查询类
     /// </summary>
-    public class ProductInfoListParam
+    public class ProductCartListParam
     {
-        public string Name { get; set; }
     }
 }

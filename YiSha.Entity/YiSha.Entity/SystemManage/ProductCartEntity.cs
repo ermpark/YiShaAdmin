@@ -7,48 +7,47 @@ namespace YiSha.Entity.SystemManage
 {
     /// <summary>
     /// 创 建：admin
-    /// 日 期：2022-02-11 18:44
-    /// 描 述：产品明细表实体类
+    /// 日 期：2022-02-12 12:43
+    /// 描 述：购物车实体类
     /// </summary>
-    [Table("ProductInfo")]
-    public class ProductInfoEntity : BaseEntity
+    [Table("ProductCart")]
+    public class ProductCartEntity : BaseEntity
     {
         /// <summary>
-        /// 
+        /// 产品编号
         /// </summary>
         /// <returns></returns>
-        public string Name { get; set; }
+        public int? ProductId { get; set; }
         /// <summary>
-        /// 
+        /// 数量
         /// </summary>
         /// <returns></returns>
-        public string Spec { get; set; }
+        public int? Count { get; set; }
         /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public string Fac { get; set; }
-        /// <summary>
-        /// 
+        /// 单价
         /// </summary>
         /// <returns></returns>
         public decimal? SalePrice { get; set; }
         /// <summary>
-        /// 
+        /// 总价
         /// </summary>
         /// <returns></returns>
-        public decimal? CostPrice { get; set; }
+        public decimal? TotalPrice { get; set; }
         /// <summary>
-        /// 
+        /// 订单号
         /// </summary>
         /// <returns></returns>
-        public string Unit { get; set; }
+        public string TradeNumber { get; set; }
         /// <summary>
-        /// 
+        /// 创建时间
         /// </summary>
         /// <returns></returns>
         [JsonConverter(typeof(DateTimeJsonConverter))]
         public DateTime? CreateTime { get; set; }
-        public string NamePY { get; set; }
+        /// <summary>
+        /// 产品名称
+        /// </summary>
+        /// <returns></returns>
+        public string ProductName { get; set; }
     }
 }
