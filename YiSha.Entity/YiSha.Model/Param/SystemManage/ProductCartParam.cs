@@ -12,5 +12,7 @@ namespace YiSha.Model.Param.SystemManage
     /// </summary>
     public class ProductCartListParam
     {
+        public long? ProductId { get; set; }
+        public int? Count { get; set; }
     }
 }

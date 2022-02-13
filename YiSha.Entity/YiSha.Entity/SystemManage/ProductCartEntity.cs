@@ -17,7 +17,7 @@ namespace YiSha.Entity.SystemManage
         /// 产品编号
         /// </summary>
         /// <returns></returns>
-        public int? ProductId { get; set; }
+        public long? ProductId { get; set; }
         /// <summary>
         /// 数量
         /// </summary>
@@ -49,5 +49,7 @@ namespace YiSha.Entity.SystemManage
         /// </summary>
         /// <returns></returns>
         public string ProductName { get; set; }
+        public string Spec { get; set; }
+        public string Fac { get; set; }
     }
 }

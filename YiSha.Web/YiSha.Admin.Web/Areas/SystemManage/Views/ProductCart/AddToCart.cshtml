@@ -15,8 +15,10 @@
 
 <script type="text/javascript">
     var id = ys.request("id");
+    alert(id);
     $(function () {
         getForm();
+
         $('#form').validate({
             rules: {
                 count: { required: true }
@@ -44,7 +46,7 @@
 
     function saveForm(index) {
         if ($('#form').validate().form()) {
-            var postData = $('#form').getWebControls({ ProductId: id });
+            var postData = $('#form').getWebControls({ Id: id });
             ys.ajax({
                 url: '@Url.Content("~/SystemManage/ProductCart/SaveFormJson")',
                 type: 'post',

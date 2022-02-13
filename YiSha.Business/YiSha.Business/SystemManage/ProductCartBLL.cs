@@ -52,11 +52,11 @@ namespace YiSha.Business.SystemManage
         #endregion
 
         #region 提交数据
-        public async Task<TData<string>> SaveForm(ProductCartEntity entity)
+        public async Task<TData<string>> SaveForm(ProductCartListParam entity)
         {
             TData<string> obj = new TData<string>();
             await productCartService.SaveForm(entity);
-            obj.Data = entity.Id.ParseToString();
+            obj.Data = entity.ProductId.ParseToString();
             obj.Tag = 1;
             return obj;
         }

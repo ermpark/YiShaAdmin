@@ -63,7 +63,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YiSha.RedisCache", "YiSha.C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YiSha.CacheTest", "YiSha.Test\YiSha.CacheTest\YiSha.CacheTest.csproj", "{1D926E88-D833-4FCA-BA5D-68D1A219E933}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YiSha.DataTest", "YiSha.Test\YiSha.DataTest\YiSha.DataTest.csproj", "{DD0E31F2-37AF-447A-9F88-FDFC1C021ECD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YiSha.DataTest", "YiSha.Test\YiSha.DataTest\YiSha.DataTest.csproj", "{DD0E31F2-37AF-447A-9F88-FDFC1C021ECD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

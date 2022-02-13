@@ -66,7 +66,7 @@ namespace YiSha.Admin.Web.Areas.SystemManage.Controllers
         #region 提交数据
         [HttpPost]
         [AuthorizeFilter("system:productcart:add,system:productcart:edit")]
-        public async Task<ActionResult> SaveFormJson(ProductCartEntity entity)
+        public async Task<ActionResult> SaveFormJson(ProductCartListParam entity)
         {
             TData<string> obj = await productCartBLL.SaveForm(entity);
             return Json(obj);

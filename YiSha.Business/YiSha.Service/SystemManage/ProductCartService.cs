@@ -20,7 +20,7 @@ namespace YiSha.Service.SystemManage
     /// 日 期：2022-02-12 12:43
     /// 描 述：购物车服务类
     /// </summary>
-    public class ProductCartService :  RepositoryFactory
+    public class ProductCartService : RepositoryFactory
     {
         #region 获取数据
         public async Task<List<ProductCartEntity>> GetList(ProductCartListParam param)
@@ -33,7 +33,7 @@ namespace YiSha.Service.SystemManage
         public async Task<List<ProductCartEntity>> GetPageList(ProductCartListParam param, Pagination pagination)
         {
             var expression = ListFilter(param);
-            var list= await this.BaseRepository().FindList(expression, pagination);
+            var list = await this.BaseRepository().FindList(expression, pagination);
             return list.ToList();
         }
 
@@ -44,17 +44,31 @@ namespace YiSha.Service.SystemManage
         #endregion
 
         #region 提交数据
-        public async Task SaveForm(ProductCartEntity entity)
+        public async Task SaveForm(ProductCartListParam param)
         {
-            if (entity.Id.IsNullOrZero())
+            //产品的id
+            var p = await this.BaseRepository().FindEntity<ProductInfoEntity>(param.ProductId.Value);
+            //根据产品id找到价格 赋值entity 参与计算 加入购物车列表，结算的时候调用打印并收款
+            var entity = new ProductCartEntity();
+            entity.ProductName = p.Name;
+            entity.ProductId = p.Id;
+            entity.SalePrice = p.SalePrice;
+            entity.TotalPrice = p.SalePrice * param.Count;
+            entity.Fac = p.Fac;
+            entity.Spec = p.Spec;
+            entity.Count = param.Count;
+            //如果有重复的，累加，否则就新增
+            var dao = await this.BaseRepository().FindEntity<ProductCartEntity>(l => l.ProductId == param.ProductId.Value);
+            if (dao != null)
             {
-                entity.Create();
-                await this.BaseRepository().Insert(entity);
+                dao.Count = dao.Count + param.Count;
+                dao.TotalPrice = p.SalePrice * dao.Count;
+                await this.BaseRepository().Update(dao);
             }
             else
             {
-                
-                await this.BaseRepository().Update(entity);
+                entity.Create();
+                await this.BaseRepository().Insert(entity);
             }
         }
 
