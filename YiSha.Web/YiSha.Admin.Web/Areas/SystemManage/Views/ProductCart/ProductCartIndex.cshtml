@@ -18,15 +18,21 @@
         <div class="btn-group-sm hidden-xs" id="toolbar">
             @*<a id="btnEdit" class="btn btn-primary disabled" onclick="showAddForm(false)"><i class="fa fa-edit"></i> 添加</a>*@
             @*<a id="btnAdd" class="btn btn-success" onclick="showSaveForm(true)"><i class="fa fa-plus"></i> 新增</a>
-                <a id="btnEdit" class="btn btn-primary disabled" onclick="showSaveForm(false)"><i class="fa fa-edit"></i> 修改</a>
-                <a id="btnDelete" class="btn btn-danger disabled" onclick="deleteForm()"><i class="fa fa-remove"></i> 删除</a>*@
+            <a id="btnEdit" class="btn btn-primary disabled" onclick="showSaveForm(false)"><i class="fa fa-edit"></i> 修改</a>
+            <a id="btnDelete" class="btn btn-danger disabled" onclick="deleteForm()"><i class="fa fa-remove"></i> 删除</a>*@
         </div>
+
         <div class="col-sm-4  table-striped">
             <table id="gridTableList" data-mobile-responsive="true"></table>
         </div>
-        <div class="col-sm-4  table-striped">
+
+        <div class="col-sm-4 table-bordered" id="cart_print">
             <table id="gridTable" data-mobile-responsive="true"></table>
+           
         </div>
+        <button type="button" onclick="showPrintForm()" class="btn btn-w-m btn-info">结算</button>
+        <button type="button" onclick="btnPrint()" class="btn btn-w-m btn-info">结算并打印</button>
+        <button type="button" class="btn btn-w-m btn-default">清空</button>
     </div>
 </div>
 
@@ -40,22 +46,26 @@
         $('#gridTable').ysTable({
             url: queryUrl,
             showFooter: true,
+            showSearch: false,
+            showRefresh: false,
+            showToggle: false,
+            showColumns: false,
             columns: [
                 //{ checkbox: true, visible: true },
                 { field: 'Id', title: 'Id', visible: false },
                 { field: 'ProductName', title: '名称' },
                 { field: 'Spec', title: '规格' },
                 { field: 'Fac', title: '工厂' },
+                { field: 'SalePrice', title: '单价（￥元）' },
                 { field: 'Count', title: '数量' },
-                { field: 'SalePrice', title: '单价' },
                 {
-                    field: 'TotalPrice', title: '售价',
+                    field: 'TotalPrice', title: '金额（￥元）',
                     footerFormatter: function (value) {
                         var sumBalance = 0;
                         for (var i in value) {
                             sumBalance += parseFloat(value[i].TotalPrice);
                         }
-                        return "总价：" + sumBalance;
+                        return "合计：" + sumBalance;
                     }
                 },
             ],
@@ -69,13 +79,17 @@
         var queryListUrl = '@Url.Content("~/SystemManage/ProductInfo/GetPageListJson")';
         $('#gridTableList').ysTable({
             url: queryListUrl,
+            showSearch: false,
+            showRefresh: false,
+            showToggle: false,
+            showColumns: false,
             columns: [
                 //{ checkbox: true, visible: true },
                 { field: 'Id', title: '编号', visible: false },
                 { field: 'Name', title: '名称' },
                 { field: 'Spec', title: '规格' },
                 { field: 'Fac', title: '工厂' },
-                { field: 'SalePrice', title: '售价（￥元）' },
+                { field: 'SalePrice', title: '单价（￥元）' },
                 { field: 'Unit', title: '单位' },
                 {
                     title: '操作', width: '10%', align: 'center',
@@ -156,5 +170,44 @@
                 });
             });
         }
+    }
+    function showPrintForm()
+    {
+        ys.openDialog({
+            title:'打印清单',
+            content: '@Url.Content("~/SystemManage/ProductCart/Page1")',
+            width: '800px',
+            height: '500px',
+            callback: function (index, layero) {
+                var iframeWin = window[layero.find('iframe')[0]['name']];
+                iframeWin.saveForm(index);
+            }
+        });
+    }
+    function btnPrint()
+    {
+        myPrint('cart_print');
+    }
+    //iframe 打印
+    function myPrint(id_str) {
+        //判断iframe是否存在，不存在则创建iframe
+        var iframe = document.getElementById("print-iframe");
+        if (!iframe) {
+            var el = document.getElementById(id_str);
+            iframe = document.createElement('IFRAME');
+            var doc = null;
+            iframe.setAttribute("id", "print-iframe");
+            iframe.setAttribute('style', 'position:absolute;width:0px;height:0px;left:-500px;top:-500px;');
+            document.body.appendChild(iframe);
+            doc = iframe.contentWindow.document;
+            //这里可以自定义样式
+            //doc.write('<LINK rel="stylesheet" type="text/css" href="/css/print.css">');
+            doc.write('<div>' + el.innerHTML + '</div>');
+            doc.close();
+            iframe.contentWindow.focus();
+        }
+        iframe.contentWindow.print();
+        document.body.removeChild(iframe);
+
     }
 </script>

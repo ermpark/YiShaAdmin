@@ -1,0 +1,89 @@
+﻿@{
+    Layout = "~/Views/Shared/_Index.cshtml";
+}
+<div class="container-div" id="div_print">
+    <div class="wrapper animated fadeInRight">
+        <div class="form-group">
+            <label class="col-sm-11  align-content-center" style=" text-align:center; font-size:large"><b>信誉水暖</b></label>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-11 control-label ">业务范围：销售各类水管，管件，净水器，蹲便，洗脸盆，供水器，阀门等</label>
+
+        </div>
+        <div class="form-group">
+            <label class="col-sm-11 control-label ">门店地址：洛宁县长虹北路王五超市隔壁信誉水暖</label>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-5 control-label ">联系电话：13343882621</label>  <label class="col-sm-6 control-label ">日期：2022-02-14 </label>
+        </div>
+        <div class="col-sm-11 table-bordered">
+            <table id="gridTable" data-mobile-responsive="true"></table>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function () {
+        initGrid();
+    });
+    function initGrid() {
+         var queryUrl = '@Url.Content("~/SystemManage/ProductCart/GetPageListJson")';
+        $('#gridTable').ysTable({
+            url: queryUrl,
+            showFooter: true,
+            showSearch: false,
+            showRefresh: false,
+            showToggle: false,
+            showColumns: false,
+            columns: [
+                //{ checkbox: true, visible: true },
+                { field: 'Id', title: 'Id', visible: false },
+                { field: 'ProductName', title: '名称' },
+                { field: 'Spec', title: '规格' },
+                { field: 'Fac', title: '品牌' },
+                { field: 'SalePrice', title: '单价（￥元）' },
+                { field: 'Count', title: '数量' },
+                {
+                    field: 'TotalPrice', title: '金额（￥元）',
+                    footerFormatter: function (value) {
+                        var sumBalance = 0;
+                        for (var i in value) {
+                            sumBalance += parseFloat(value[i].TotalPrice);
+                        }
+                        return "合计：" + sumBalance;
+                    }
+                },
+            ],
+            pagination: false,
+            queryParams: function (params) {
+                var pagination = $('#gridTable').ysTable('getPagination', params);
+                var queryString = $('#searchDiv').getWebControls(pagination);
+                return queryString;
+            }
+        });
+    }
+    function myPrint(id_str) {
+        //判断iframe是否存在，不存在则创建iframe
+        var iframe = document.getElementById("print-iframe");
+        if (!iframe) {
+            var el = document.getElementById(id_str);
+            iframe = document.createElement('IFRAME');
+            var doc = null;
+            iframe.setAttribute("id", "print-iframe");
+            iframe.setAttribute('style', 'position:absolute;width:0px;height:0px;left:-500px;top:-500px;');
+            document.body.appendChild(iframe);
+            doc = iframe.contentWindow.document;
+            //这里可以自定义样式
+            //doc.write('<LINK rel="stylesheet" type="text/css" href="/css/print.css">');
+            doc.write('<div>' + el.innerHTML + '</div>');
+            doc.close();
+            iframe.contentWindow.focus();
+        }
+        iframe.contentWindow.print();
+        document.body.removeChild(iframe);
+
+    }
+    function saveForm() {
+        myPrint('div_print');
+    }
+</script>
+

@@ -36,6 +36,10 @@ namespace YiSha.Admin.Web.Areas.SystemManage.Controllers
         {
             return View();
         }
+        public ActionResult Page1()
+        {
+            return View();
+        }
         #endregion
 
         #region 获取数据
