@@ -36,7 +36,12 @@ namespace YiSha.Service.SystemManage
             var list = await this.BaseRepository().FindList(expression, pagination);
             return list.ToList();
         }
-
+        public async Task<decimal?> GetSumPrice(ProductCartListParam param, Pagination pagination)
+        {
+            var expression = ListFilter(param);
+            var list = await this.BaseRepository().FindList(expression, pagination);
+            return list.Sum(l => l.TotalPrice);
+        }
         public async Task<ProductCartEntity> GetEntity(long id)
         {
             return await this.BaseRepository().FindEntity<ProductCartEntity>(id);

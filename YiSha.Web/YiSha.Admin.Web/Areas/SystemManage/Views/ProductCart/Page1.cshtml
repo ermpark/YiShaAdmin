@@ -1,35 +1,114 @@
 ﻿@{
     Layout = "~/Views/Shared/_Index.cshtml";
 }
+<script src="~/yisha/js/LodopFuncs.js"></script>
+<style id="table_border_style">
+    .table_border {
+        border: solid 1px #B4B4B4;
+        border-collapse: collapse;
+        width:100%;
+    }
+        .table_border tr th {
+            padding-left: 4px;
+            height: 27px;
+            border: solid 1px #B4B4B4;
+        }
+
+        .table_border tr td {
+            height: 25px;
+            padding: 4px;
+            border: solid 1px #B4B4B4;
+        }
+    .table_border0 {
+        border: solid 0px #B4B4B4;
+        border-collapse: collapse;
+        width:100%;
+    }
+
+        .table_border0 tr th {
+            padding-left: 4px;
+            height: 27px;
+            border: solid 0px #B4B4B4;
+        }
+
+        .table_border0 tr td {
+            height: 25px;
+            padding: 4px;
+            border: solid 0px #B4B4B4;
+        }
+</style>
 <div class="container-div" id="div_print">
-    <div class="wrapper animated fadeInRight">
-        <div class="form-group">
+    <table class="table_border0">
+        <tr><td colspan="2" style="font-size:24px; text-align:center"><b>信誉水暖</b></td></tr>
+        <tr><td colspan="2">业务范围：销售各类水管，管件，净水器，蹲便，洗脸盆，供水器，阀门等</td></tr>
+        <tr><td colspan="2">门店地址：洛宁县长虹北路王五超市隔壁信誉水暖</td></tr>
+        <tr><td>联系电话：13343882621</td><td>日期：2022-02-14</td></tr>
+    </table>
+    <table id="gridTable" class="table_border"></table>
+    <table class="table_border0">
+        <tr><td style="text-align:right" id="sumprice">合计：72</td></tr>
+    </table>
+    <!--<div class="wrapper animated fadeInRight">-->
+    @*<div class="form-group">
             <label class="col-sm-11  align-content-center" style=" text-align:center; font-size:large"><b>信誉水暖</b></label>
         </div>
         <div class="form-group">
             <label class="col-sm-11 control-label ">业务范围：销售各类水管，管件，净水器，蹲便，洗脸盆，供水器，阀门等</label>
-
         </div>
         <div class="form-group">
             <label class="col-sm-11 control-label ">门店地址：洛宁县长虹北路王五超市隔壁信誉水暖</label>
         </div>
         <div class="form-group">
             <label class="col-sm-5 control-label ">联系电话：13343882621</label>  <label class="col-sm-6 control-label ">日期：2022-02-14 </label>
+        </div>*@
+    <!--<div class="col-sm-11 table-bordered">
+            <table id="gridTable" class="table_border" data-mobile-responsive="true"></table>
         </div>
-        <div class="col-sm-11 table-bordered">
-            <table id="gridTable" data-mobile-responsive="true"></table>
-        </div>
-    </div>
+    </div>-->
+    @*<table class="table table-striped" id="div_print">
+            <tr>
+                <td>序号</td>
+                <td>名称</td>
+                <td>规格</td>
+                <td>单位</td>
+                <td>单价（￥元）</td>
+                <td>金额（￥元）</td>
+                <td>备注</td>
+            </tr>
+            <tr style=" border:solid 1px;">
+                <td style="font-size:large;text-align:center; border:solid 1px;">1</td>
+                <td style="font-size:large;text-align:center">金牛</td>
+                <td style="font-size:large;text-align:center">15mm</td>
+                <td style="font-size:large;text-align:center">个</td>
+                <td style="font-size:large;text-align:center">3（￥元）</td>
+                <td style="font-size:large;text-align:center">3（￥元）</td>
+                <td style="font-size:large;text-align:center">灰管</td>
+            </tr>
+        </table>*@
 </div>
 <script type="text/javascript">
+    var LODOP; //声明为全局变量
     $(function () {
         initGrid();
     });
+    function prn1_preview() {
+        CreateOneFormPage();
+        LODOP.PREVIEW();
+    };
+    function CreateOneFormPage() {
+        LODOP = getLodop();
+        LODOP.PRINT_INIT("打印页面内容");
+        //var strStyleCSS = "<link href='/admin/lib/bootstrap/3.3.7/css/bootstrap.css?v=637806313814101941' type='text/css' rel='stylesheet'>";
+        var strStyleCSS = "<style>" + document.getElementById("table_border_style").innerHTML + "</style>";
+        var strFormHtml = strStyleCSS + "<body>" + document.getElementById("div_print").innerHTML + "</body>";
+        //LODOP.SET_PRINT_STYLE("Border", 1);
+        LODOP.ADD_PRINT_HTM(30, 20, 700, 500, strFormHtml);
+    };
     function initGrid() {
          var queryUrl = '@Url.Content("~/SystemManage/ProductCart/GetPageListJson")';
         $('#gridTable').ysTable({
             url: queryUrl,
-            showFooter: true,
+            showFooter: false,
             showSearch: false,
             showRefresh: false,
             showToggle: false,
@@ -40,16 +119,16 @@
                 { field: 'ProductName', title: '名称' },
                 { field: 'Spec', title: '规格' },
                 { field: 'Fac', title: '品牌' },
-                { field: 'SalePrice', title: '单价（￥元）' },
+                { field: 'SalePrice', title: '单价（元）' },
                 { field: 'Count', title: '数量' },
                 {
-                    field: 'TotalPrice', title: '金额（￥元）',
+                    field: 'TotalPrice', title: '金额（元）',
                     footerFormatter: function (value) {
                         var sumBalance = 0;
                         for (var i in value) {
                             sumBalance += parseFloat(value[i].TotalPrice);
                         }
-                        return "合计：" + sumBalance;
+                        return "合计：" + sumBalance+"元";
                     }
                 },
             ],
@@ -83,7 +162,8 @@
 
     }
     function saveForm() {
-        myPrint('div_print');
+        //myPrint('div_print');
+        prn1_preview();
     }
 </script>
 

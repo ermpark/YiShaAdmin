@@ -12,6 +12,7 @@ using YiSha.Admin.Web.Controllers;
 using YiSha.Entity.SystemManage;
 using YiSha.Business.SystemManage;
 using YiSha.Model.Param.SystemManage;
+using YiSha.Model.Result.SystemManage;
 
 namespace YiSha.Admin.Web.Areas.SystemManage.Controllers
 {
@@ -21,7 +22,7 @@ namespace YiSha.Admin.Web.Areas.SystemManage.Controllers
     /// 描 述：购物车控制器类
     /// </summary>
     [Area("SystemManage")]
-    public class ProductCartController :  BaseController
+    public class ProductCartController : BaseController
     {
         private ProductCartBLL productCartBLL = new ProductCartBLL();
 
@@ -58,7 +59,15 @@ namespace YiSha.Admin.Web.Areas.SystemManage.Controllers
             TData<List<ProductCartEntity>> obj = await productCartBLL.GetPageList(param, pagination);
             return Json(obj);
         }
-
+        [HttpGet]
+        [AuthorizeFilter("system:productcart:search")]
+        public async Task<ActionResult> GetSumPriceJson(ProductCartListParam param, Pagination pagination)
+        {
+            TData<List<ProductCartEntity>> obj = await productCartBLL.GetPageList(param, pagination);
+            var result = new CalcTotalResult();
+            result.TotalAmount = obj.Data.Sum(l => l.TotalPrice);
+            return Json(result);
+        }
         [HttpGet]
         public async Task<ActionResult> GetFormJson(long id)
         {
